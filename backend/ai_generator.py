@@ -1,4 +1,5 @@
 import anthropic
+import os
 from typing import List, Optional, Dict, Any
 
 class AIGenerator:
@@ -30,7 +31,11 @@ Provide only the direct answer to what was asked.
 """
     
     def __init__(self, api_key: str, model: str):
-        self.client = anthropic.Anthropic(api_key=api_key)
+        kwargs = {"api_key": api_key}
+        base_url = os.getenv("ANTHROPIC_BASE_URL")
+        if base_url:
+            kwargs["base_url"] = base_url
+        self.client = anthropic.Anthropic(**kwargs)
         self.model = model
         
         # Pre-build base API parameters
